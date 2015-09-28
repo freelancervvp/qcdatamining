@@ -7,6 +7,127 @@ library(ggplot2)
 #str(t)
 #summary(t)
 
+#_____________________________________________________________________________________________________________________________
+# Load the test set
+
+setwd("C:\\freelancervvp\\Projects\\2015_Data_Mining\\new_data")
+testset <- read.csv("test_set_all_fields.csv")
+str(testset)
+summary(testset)
+
+
+
+
+
+#_____________________________________________________________________________________________________________________________
+# Calculate rmsle for training data when predicting mean value
+
+mean.train.d <- mean(temp$download_speed, na.rm = T)
+mean.train.u <- mean(temp$upload_speed, na.rm = T)
+rmsle.train.d <- sqrt(1 / nrow(temp[which(!is.na(temp$download_speed)),]) * 
+                              sum((log10(mean.train.d + 1) - 
+                                           log10(temp[which(!is.na(temp$download_speed)),]$download_speed + 1))^2))
+#rmse.train.d <- sqrt(1 / nrow(temp[which(!is.na(temp$download_speed)),]) * 
+#                        sum((mean.train.d - temp[which(!is.na(temp$download_speed)),]$download_speed)^2))
+rmsle.train.u <- sqrt(1 / nrow(temp[which(!is.na(temp$upload_speed)),]) * 
+                              sum((log10(mean.train.u + 1) - 
+                                           log10(temp[which(!is.na(temp$upload_speed)),]$upload_speed + 1))^2))
+# try PREDICT = mean
+library(dplyr)
+testset.predict.mean <- select(testset, upload_speed, download_speed)
+summary(testset.predict.mean)
+levels(testset.predict.mean$download_speed) <- c(levels(testset.predict.mean$download_speed), mean.train.d)
+testset.predict.mean[which(testset.predict.mean$download_speed == "PREDICT"),]$download_speed <- mean.train.d
+summary(testset.predict.mean)
+levels(testset.predict.mean$upload_speed) <- c(levels(testset.predict.mean$upload_speed), mean.train.u)
+testset.predict.mean[which(testset.predict.mean$upload_speed == "PREDICT"),]$upload_speed <- mean.train.u
+summary(testset.predict.mean)
+head(testset.predict.mean)
+write.table(testset.predict.mean, file = "YetAnotherTeam_initial_test_0.csv", sep = ",", row.names = F)
+
+
+#_____________________________________________________________________________________________________________________________
+# Calculate rmsle for training data when predicting mean value per technology
+
+mean.lte.d <- mean(temp[which(temp$nw_type == "LTE"),]$download_speed, na.rm = T)
+mean.cdma.d <- mean(temp[which(temp$nw_type == "CDMA"),]$download_speed, na.rm = T)
+mean.gsm.d <- mean(temp[which(temp$nw_type == "GSM"),]$download_speed, na.rm = T)
+mean.umts.d <- mean(temp[which(temp$nw_type == "UMTS"),]$download_speed, na.rm = T)
+mean.na.d <- mean(temp[which(is.na(temp$nw_type)),]$download_speed, na.rm = T)
+mean.lte.u <- mean(temp[which(temp$nw_type == "LTE"),]$upload_speed, na.rm = T)
+mean.cdma.u <- mean(temp[which(temp$nw_type == "CDMA"),]$upload_speed, na.rm = T)
+mean.gsm.u <- mean(temp[which(temp$nw_type == "GSM"),]$upload_speed, na.rm = T)
+mean.umts.u <- mean(temp[which(temp$nw_type == "UMTS"),]$upload_speed, na.rm = T)
+mean.na.u <- mean(temp[which(is.na(temp$nw_type)),]$upload_speed, na.rm = T)
+library(dplyr)
+predicted <- select(temp, upload_speed, download_speed, nw_type)
+#ul
+predicted$download_speed_prediction <- NA
+predicted[which(predicted$nw_type == "LTE" & !is.na(predicted$download_speed)),]$download_speed_prediction <- mean.lte.d
+predicted[which(predicted$nw_type == "CDMA" & !is.na(predicted$download_speed)),]$download_speed_prediction <- mean.cdma.d
+predicted[which(predicted$nw_type == "GSM" & !is.na(predicted$download_speed)),]$download_speed_prediction <- mean.gsm.d
+predicted[which(predicted$nw_type == "UMTS" & !is.na(predicted$download_speed)),]$download_speed_prediction <- mean.umts.d
+predicted[which(is.na(predicted$nw_type)) & !is.na(predicted$download_speed),]$download_speed_prediction <- mean.na.d
+summary(predicted$download_speed_prediction)
+summary(predicted$download_speed)
+table(predicted$download_speed_prediction)
+#dl
+predicted$upload_speed_prediction <- NA
+predicted[which(predicted$nw_type == "LTE" & !is.na(predicted$upload_speed)),]$upload_speed_prediction <- mean.lte.u
+predicted[which(predicted$nw_type == "CDMA" & !is.na(predicted$upload_speed)),]$upload_speed_prediction <- mean.cdma.u
+predicted[which(predicted$nw_type == "GSM" & !is.na(predicted$upload_speed)),]$upload_speed_prediction <- mean.gsm.u
+predicted[which(predicted$nw_type == "UMTS" & !is.na(predicted$upload_speed)),]$upload_speed_prediction <- mean.umts.u
+predicted[which(is.na(predicted$nw_type) & !is.na(predicted$upload_speed)),]$upload_speed_prediction <- mean.na.u
+summary(predicted$upload_speed_prediction)
+summary(predicted$upload_speed)
+table(predicted$upload_speed_prediction)
+
+rmsle.train.d.RAT <- sqrt(1 / nrow(predicted[which(!is.na(predicted$download_speed)),]) * 
+                                  sum((log10(predicted[which(!is.na(predicted$download_speed)),]$download_speed_prediction + 1) - 
+                                               log10(predicted[which(!is.na(predicted$download_speed)),]$download_speed + 1))^2))
+rmsle.train.u.RAT <- sqrt(1 / nrow(predicted[which(!is.na(predicted$upload_speed)),]) * 
+                                  sum((log10(predicted[which(!is.na(predicted$upload_speed)),]$upload_speed_prediction + 1) - 
+                                               log10(predicted[which(!is.na(predicted$upload_speed)),]$upload_speed + 1))^2))
+# try PREDICT = mean per RAT
+library(dplyr)
+testset.predict.mean <- select(testset, upload_speed, download_speed, network_type)
+summary(testset.predict.mean)
+testset.predict.mean$nw_type <- NA
+testset.predict.mean[which(testset.predict.mean$network_type == "LTE"),]$nw_type <- "LTE"
+testset.predict.mean[which(testset.predict.mean$network_type == "1xRTT" | testset.predict.mean$network_type == "eHRPD" | testset.predict.mean$network_type == "EVDO 0" | 
+                                   testset.predict.mean$network_type == "EVDO A" | testset.predict.mean$network_type == "EVDO B" | testset.predict.mean$network_type == "CDMA"),]$nw_type <- "CDMA"
+testset.predict.mean[which(testset.predict.mean$network_type == "EDGE" | testset.predict.mean$network_type == "GPRS"),]$nw_type <- "GSM"
+testset.predict.mean[which(testset.predict.mean$network_type == "HSDPA" | testset.predict.mean$network_type == "HSUPA" | testset.predict.mean$network_type == "HSPA" | 
+                                   testset.predict.mean$network_type == "HSPAP" | testset.predict.mean$network_type == "UMTS"),]$nw_type <- "UMTS"
+testset.predict.mean$nw_type <- factor(testset.predict.mean$nw_type)
+summary(testset.predict.mean$nw_type)
+summary(testset.predict.mean)
+#
+testset.predict.mean$download_speed <- as.character(levels(testset.predict.mean$download_speed))[testset.predict.mean$download_speed]
+str(testset.predict.mean$download_speed)
+table(testset.predict.mean$download_speed)
+testset.predict.mean[which(testset.predict.mean$download_speed == "PREDICT" & testset.predict.mean$nw_type == "LTE"),]$download_speed <- mean.lte.d
+testset.predict.mean[which(testset.predict.mean$download_speed == "PREDICT" & testset.predict.mean$nw_type == "CDMA"),]$download_speed <- mean.cdma.d
+testset.predict.mean[which(testset.predict.mean$download_speed == "PREDICT" & testset.predict.mean$nw_type == "GSM"),]$download_speed <- mean.gsm.d
+testset.predict.mean[which(testset.predict.mean$download_speed == "PREDICT" & testset.predict.mean$nw_type == "UMTS"),]$download_speed <- mean.umts.d
+testset.predict.mean[which(testset.predict.mean$download_speed == "PREDICT" & is.na(testset.predict.mean$nw_type)),]$download_speed <- mean.na.d
+table(testset.predict.mean$download_speed)
+#
+testset.predict.mean$upload_speed <- as.character(levels(testset.predict.mean$upload_speed))[testset.predict.mean$upload_speed]
+str(testset.predict.mean$upload_speed)
+table(testset.predict.mean$upload_speed)
+testset.predict.mean[which(testset.predict.mean$upload_speed == "PREDICT" & testset.predict.mean$nw_type == "LTE"),]$upload_speed <- mean.lte.u
+testset.predict.mean[which(testset.predict.mean$upload_speed == "PREDICT" & testset.predict.mean$nw_type == "CDMA"),]$upload_speed <- mean.cdma.u
+testset.predict.mean[which(testset.predict.mean$upload_speed == "PREDICT" & testset.predict.mean$nw_type == "GSM"),]$upload_speed <- mean.gsm.u
+testset.predict.mean[which(testset.predict.mean$upload_speed == "PREDICT" & testset.predict.mean$nw_type == "UMTS"),]$upload_speed <- mean.umts.u
+testset.predict.mean[which(testset.predict.mean$upload_speed == "PREDICT" & is.na(testset.predict.mean$nw_type)),]$upload_speed <- mean.na.u
+table(testset.predict.mean$upload_speed)
+#
+head(select(testset.predict.mean, upload_speed, download_speed))
+write.table(select(testset.predict.mean, upload_speed, download_speed), file = "YetAnotherTeam_initial_test_1.csv", sep = ",", row.names = F)
+
+
+
 t <- testset
 
 #_____________________________________________________________________________________________________________________________
