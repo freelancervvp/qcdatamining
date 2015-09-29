@@ -388,28 +388,17 @@ mse.gsm.u <- sqrt(sum((temp.gsm.u.test.prediction[,1] -
 
 
 
+#_____________________________________________________________________________________________________________________________
+# UPDATE
 
 
+# UMTS DL RANDOMFOREST + SUB NW TYPE (HSPA, HSDPA, ...)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# UMTS DL RANDOMFOREST
+library(caret)
+library(dplyr)
+library(randomForest)
+set.seed(16)
+temp.umts <- temp[which(temp$nw_type == "UMTS"),]
 
 summary(temp.umts$download_speed)
 # remove NAs in download_speed column
@@ -417,17 +406,20 @@ temp.umts.d <- temp.umts[which(!is.na(temp.umts$download_speed)),]
 summary(temp.umts.d$download_speed)
 #factorize some columls
 temp.umts.d$new_year <- factor(temp.umts.d$new_year)
-temp.umts.d$new_month <- factor(temp.umts.d$new_month)
+temp.umts.d$new_month <- factor(temp.umts.d$new_month, levels = c("1","2","3","4","5","6","7","8","9","10","11","12"))
 temp.umts.d$new_weekday <- factor(temp.umts.d$new_weekday)
-str(temp.cdma.d$app_version_code)
-# create train and test sets
-trainIndex <- createDataPartition(temp.umts.d$download_speed, p = .8, list = FALSE)
-temp.umts.d.train <- temp.umts.d[trainIndex,]
-temp.umts.d.test <- temp.umts.d[-trainIndex,]
+temp.umts.d$app_version_code <- factor(temp.umts.d$app_version_code, levels = levels(temp$app_version_code))
+str(temp.umts.d)
+# will use all training data set
+#trainIndex <- createDataPartition(temp.umts.d$download_speed, p = .8, list = FALSE)
+#temp.umts.d.train <- temp.umts.d[trainIndex,]
+#temp.umts.d.test <- temp.umts.d[-trainIndex,]
+Sys.time()
 rf.umts.d <- randomForest(download_speed ~ new_month + new_year + new_weekday +
-                                  new_network_country + network_id + rssi + network_id_sim + test_type +
-                                  icmp_ping_time + icmp_ping_packet_loss + icmp_ping_range + app_version_code, 
-                          temp.umts.d.train, importance = TRUE, ntree = 50, na.action = na.roughfix)
+                                  new_network_country + network_id + rssi + test_type +
+                                  icmp_ping_time + icmp_ping_packet_loss + icmp_ping_range + app_version_code +
+                                  network_type,
+                                  temp.umts.d, importance = TRUE, ntree = 100, na.action = na.roughfix)
 Sys.time()
 print(rf.umts.d)
 importance(rf.umts.d)
