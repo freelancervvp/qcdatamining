@@ -445,18 +445,22 @@ summary(temp.umts$upload_speed)
 temp.umts.u <- temp.umts[which(!is.na(temp.umts$upload_speed)),]
 summary(temp.umts.u$upload_speed)
 temp.umts.u$new_year <- factor(temp.umts.u$new_year)
-temp.umts.u$new_month <- factor(temp.umts.u$new_month)
+temp.umts.u$new_month <- factor(temp.umts.u$new_month, levels = c("1","2","3","4","5","6","7","8","9","10","11","12"))
 temp.umts.u$new_weekday <- factor(temp.umts.u$new_weekday)
-str(temp.umts.u$app_version_code)
+temp.umts.u$app_version_code <- factor(temp.umts.u$app_version_code, levels = levels(temp$app_version_code))
+temp.umts.u$new_network_country <- as.integer(temp.umts.u$new_network_country)
+temp.umts.u$network_id <- as.integer(temp.umts.u$network_id)
+str(temp.umts.u)
 # create train and test sets
-trainIndex <- createDataPartition(temp.umts.u$upload_speed, p = .8, list = FALSE)
-temp.umts.u.train <- temp.umts.u[trainIndex,]
-temp.umts.u.test <- temp.umts.u[-trainIndex,]
+#trainIndex <- createDataPartition(temp.umts.u$upload_speed, p = .8, list = FALSE)
+#temp.umts.u.train <- temp.umts.u[trainIndex,]
+#temp.umts.u.test <- temp.umts.u[-trainIndex,]
 Sys.time()
 rf.umts.u <- randomForest(upload_speed ~ new_month + new_year + new_weekday +
-                                  new_network_country + network_id + rssi + network_id_sim + test_type +
-                                  icmp_ping_time + icmp_ping_packet_loss + icmp_ping_range + app_version_code, 
-                          temp.umts.u.train, importance = TRUE, ntree = 50, na.action = na.roughfix)
+                            new_network_country + network_id + rssi + test_type +
+                            icmp_ping_time + icmp_ping_packet_loss + icmp_ping_range + app_version_code +
+                            network_type,
+                            temp.umts.u, importance = TRUE, ntree = 100, na.action = na.roughfix)
 Sys.time()
 print(rf.umts.u)
 importance(rf.umts.u)

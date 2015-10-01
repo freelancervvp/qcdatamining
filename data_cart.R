@@ -442,3 +442,60 @@ write.table(select(testset.predict.rt, upload_speed, download_speed), file = "Ye
 
 #
 
+save(rt.cdma.d, rt.cdma.u, 
+     rt.evdo.d, rt.evdo.u, 
+     rt.gsm.d, rt.gsm.u, 
+     rt.hrpd.d, rt.hrpd.u, 
+     rt.hsdpa.d, rt.hsdpa.u, 
+     rt.hspa.d, rt.hspa.u, 
+     rt.hspap.d, rt.hspap.u, 
+     rt.hsupa.d, rt.hsupa.u, 
+     rt.lte.d, rt.lte.u, 
+     rt.oos.d, rt.oos.u, 
+     rt.umts.d, rt.umts.u, 
+     rt.wifi.d, rt.wifi.u, 
+     file = "rt")
+
+#
+
+
+#pruning the trees
+
+rt.p.cdma.d <- prune(rt.cdma.d, cp = rt.cdma.d$cptable[which.min(rt.cdma.d$cptable[,"xerror"]),"CP"]) 
+rt.p.cdma.u <- prune(rt.cdma.u, cp = rt.cdma.u$cptable[which.min(rt.cdma.u$cptable[,"xerror"]),"CP"]) 
+rt.p.evdo.d <- prune(rt.evdo.d, cp = rt.evdo.d$cptable[which.min(rt.evdo.d$cptable[,"xerror"]),"CP"]) 
+rt.p.evdo.u <- prune(rt.evdo.u, cp = rt.evdo.u$cptable[which.min(rt.evdo.u$cptable[,"xerror"]),"CP"]) 
+rt.p.gsm.d <- prune(rt.gsm.d, cp = rt.gsm.d$cptable[which.min(rt.gsm.d$cptable[,"xerror"]),"CP"]) 
+rt.p.gsm.u <- prune(rt.gsm.u, cp = rt.gsm.u$cptable[which.min(rt.gsm.u$cptable[,"xerror"]),"CP"])
+rt.p.hrpd.d <- prune(rt.hrpd.d, cp = rt.hrpd.d$cptable[which.min(rt.hrpd.d$cptable[,"xerror"]),"CP"]) 
+rt.p.hrpd.u <- prune(rt.hrpd.u, cp = rt.hrpd.u$cptable[which.min(rt.hrpd.u$cptable[,"xerror"]),"CP"])
+rt.p.hsdpa.d <- prune(rt.hsdpa.d, cp = rt.hsdpa.d$cptable[which.min(rt.hsdpa.d$cptable[,"xerror"]),"CP"]) 
+rt.p.hsdpa.u <- prune(rt.hsdpa.u, cp = rt.hsdpa.u$cptable[which.min(rt.hsdpa.u$cptable[,"xerror"]),"CP"])
+rt.p.hspa.d <- prune(rt.hspa.d, cp = rt.hspa.d$cptable[which.min(rt.hspa.d$cptable[,"xerror"]),"CP"]) 
+rt.p.hspa.u <- prune(rt.hspa.u, cp = rt.hspa.u$cptable[which.min(rt.hspa.u$cptable[,"xerror"]),"CP"])
+rt.p.hspap.d <- prune(rt.hspap.d, cp = rt.hspap.d$cptable[which.min(rt.hspap.d$cptable[,"xerror"]),"CP"]) 
+rt.p.hspap.u <- prune(rt.hspap.u, cp = rt.hspap.u$cptable[which.min(rt.hspap.u$cptable[,"xerror"]),"CP"])
+rt.p.hsupa.d <- prune(rt.hsupa.d, cp = rt.hsupa.d$cptable[which.min(rt.hsupa.d$cptable[,"xerror"]),"CP"]) 
+rt.p.hsupa.u <- prune(rt.hsupa.u, cp = rt.hsupa.u$cptable[which.min(rt.hsupa.u$cptable[,"xerror"]),"CP"])
+rt.p.lte.d <- prune(rt.lte.d, cp = rt.lte.d$cptable[which.min(rt.lte.d$cptable[,"xerror"]),"CP"]) 
+rt.p.lte.u <- prune(rt.lte.u, cp = rt.lte.u$cptable[which.min(rt.lte.u$cptable[,"xerror"]),"CP"])
+rt.p.oos.d <- prune(rt.oos.d, cp = rt.oos.d$cptable[which.min(rt.oos.d$cptable[,"xerror"]),"CP"]) 
+rt.p.oos.u <- prune(rt.oos.u, cp = rt.oos.u$cptable[which.min(rt.oos.u$cptable[,"xerror"]),"CP"])
+rt.p.umts.d <- prune(rt.umts.d, cp = rt.umts.d$cptable[which.min(rt.umts.d$cptable[,"xerror"]),"CP"]) 
+rt.p.umts.u <- prune(rt.umts.u, cp = rt.umts.u$cptable[which.min(rt.umts.u$cptable[,"xerror"]),"CP"])
+rt.p.wifi.d <- prune(rt.wifi.d, cp = rt.wifi.d$cptable[which.min(rt.wifi.d$cptable[,"xerror"]),"CP"]) 
+rt.p.wifi.u <- prune(rt.wifi.u, cp = rt.wifi.u$cptable[which.min(rt.wifi.u$cptable[,"xerror"]),"CP"])
+
+save(rt.p.cdma.d, rt.p.cdma.u, 
+     rt.p.evdo.d, rt.p.evdo.u, 
+     rt.p.gsm.d, rt.p.gsm.u, 
+     rt.p.hrpd.d, rt.p.hrpd.u, 
+     rt.p.hsdpa.d, rt.p.hsdpa.u, 
+     rt.p.hspa.d, rt.p.hspa.u, 
+     rt.p.hspap.d, rt.p.hspap.u, 
+     rt.p.hsupa.d, rt.p.hsupa.u, 
+     rt.p.lte.d, rt.p.lte.u, 
+     rt.p.oos.d, rt.p.oos.u, 
+     rt.p.umts.d, rt.p.umts.u, 
+     rt.p.wifi.d, rt.p.wifi.u, 
+     file = "rt.p")

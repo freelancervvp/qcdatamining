@@ -6,7 +6,7 @@ str(evalset)
 summary(evalset)
 
 #For convinience
-t <- testset
+t <- evalset
 
 #_____________________________________________________________________________________________________________________________
 #udid exploration
@@ -223,7 +223,6 @@ ggplot(temp, aes(x=rssi)) + geom_histogram(binwidth=1, colour="black", fill="whi
 #ggplot(data = temp, aes(rssi, download_speed)) + geom_point()
 t <- temp
 
-#STOP#
 
 #_____________________________________________________________________________________________________________________________
 #bit_error_rate formatting
@@ -685,9 +684,9 @@ ggplot(temp[temp$app_version_code == 2.63 | temp$app_version_code == 3.31,], aes
 summary(temp$app_version_code)
 #NAying not popular versions
 sort(table(temp$app_version_code), decreasing = T)
-tail(sort(table(temp$app_version_code), decreasing = T), 50)
-names(tail(sort(table(temp$app_version_code), decreasing = T), 50))
-temp$app_version_code[temp$app_version_code %in% names(tail(sort(table(temp$app_version_code), decreasing = T), 50))] <- NA
+tail(sort(table(temp$app_version_code), decreasing = T), 80)
+names(tail(sort(table(temp$app_version_code), decreasing = T), 80))
+temp$app_version_code[temp$app_version_code %in% names(tail(sort(table(temp$app_version_code), decreasing = T), 80))] <- NA
 temp$app_version_code[temp$app_version_code == "NULL"] <- NA
 temp$app_version_code <- factor(temp$app_version_code)
 summary(temp$app_version_code)
@@ -695,20 +694,6 @@ str(temp$app_version_code)
 sort(table(temp$app_version_code), decreasing = T)
 ggplot(temp, aes(x=app_version_code, y=download_speed)) + geom_boxplot() + ggtitle("Download speed vs. app_version_code")
 t <- temp
-#additional NAying
-temp <- t
-names(tail(sort(table(temp$app_version_code), decreasing = T), 33))
-temp$app_version_code[temp$app_version_code %in% names(tail(sort(table(temp$app_version_code), decreasing = T), 33))] <- NA
-temp$app_version_code[temp$app_version_code == "NULL"] <- NA
-temp$app_version_code <- factor(temp$app_version_code)
-summary(temp$app_version_code)
-str(temp$app_version_code)
-sort(table(temp$app_version_code), decreasing = T)
-t <- temp
-
-
-
-
 
 
 
@@ -716,34 +701,7 @@ t <- temp
 
 
 #_____________________________________________________________________________________________________________________________
-# Calculate rmsle for training data when predicting mean value
-
-mean.train.d <- mean(temp$download_speed, na.rm = T)
-mean.train.u <- mean(temp$upload_speed, na.rm = T)
-rmsle.train.d <- sqrt(1 / nrow(temp[which(!is.na(temp$download_speed)),]) * 
-                        sum((log10(mean.train.d + 1) - 
-                               log10(temp[which(!is.na(temp$download_speed)),]$download_speed + 1))^2))
-#rmse.train.d <- sqrt(1 / nrow(temp[which(!is.na(temp$download_speed)),]) * 
-#                        sum((mean.train.d - temp[which(!is.na(temp$download_speed)),]$download_speed)^2))
-rmsle.train.u <- sqrt(1 / nrow(temp[which(!is.na(temp$upload_speed)),]) * 
-                        sum((log10(mean.train.u + 1) - 
-                               log10(temp[which(!is.na(temp$upload_speed)),]$upload_speed + 1))^2))
-# try PREDICT = mean
-library(dplyr)
-testset.predict.mean <- select(testset, upload_speed, download_speed)
-summary(testset.predict.mean)
-levels(testset.predict.mean$download_speed) <- c(levels(testset.predict.mean$download_speed), mean.train.d)
-testset.predict.mean[which(testset.predict.mean$download_speed == "PREDICT"),]$download_speed <- mean.train.d
-summary(testset.predict.mean)
-levels(testset.predict.mean$upload_speed) <- c(levels(testset.predict.mean$upload_speed), mean.train.u)
-testset.predict.mean[which(testset.predict.mean$upload_speed == "PREDICT"),]$upload_speed <- mean.train.u
-summary(testset.predict.mean)
-head(testset.predict.mean)
-write.table(testset.predict.mean, file = "YetAnotherTeam_initial_test_0.csv", sep = ",", row.names = F)
-
-
-#_____________________________________________________________________________________________________________________________
-# Calculate rmsle for training data when predicting mean value per technology
+# mean value per technology
 
 mean.lte.d <- mean(temp[which(temp$nw_type == "LTE"),]$download_speed, na.rm = T)
 mean.cdma.d <- mean(temp[which(temp$nw_type == "CDMA"),]$download_speed, na.rm = T)
@@ -755,86 +713,6 @@ mean.cdma.u <- mean(temp[which(temp$nw_type == "CDMA"),]$upload_speed, na.rm = T
 mean.gsm.u <- mean(temp[which(temp$nw_type == "GSM"),]$upload_speed, na.rm = T)
 mean.umts.u <- mean(temp[which(temp$nw_type == "UMTS"),]$upload_speed, na.rm = T)
 mean.na.u <- mean(temp[which(is.na(temp$nw_type)),]$upload_speed, na.rm = T)
-library(dplyr)
-predicted <- select(temp, upload_speed, download_speed, nw_type)
-#ul
-predicted$download_speed_prediction <- NA
-predicted[which(predicted$nw_type == "LTE" & !is.na(predicted$download_speed)),]$download_speed_prediction <- mean.lte.d
-predicted[which(predicted$nw_type == "CDMA" & !is.na(predicted$download_speed)),]$download_speed_prediction <- mean.cdma.d
-predicted[which(predicted$nw_type == "GSM" & !is.na(predicted$download_speed)),]$download_speed_prediction <- mean.gsm.d
-predicted[which(predicted$nw_type == "UMTS" & !is.na(predicted$download_speed)),]$download_speed_prediction <- mean.umts.d
-predicted[which(is.na(predicted$nw_type)) & !is.na(predicted$download_speed),]$download_speed_prediction <- mean.na.d
-summary(predicted$download_speed_prediction)
-summary(predicted$download_speed)
-table(predicted$download_speed_prediction)
-#dl
-predicted$upload_speed_prediction <- NA
-predicted[which(predicted$nw_type == "LTE" & !is.na(predicted$upload_speed)),]$upload_speed_prediction <- mean.lte.u
-predicted[which(predicted$nw_type == "CDMA" & !is.na(predicted$upload_speed)),]$upload_speed_prediction <- mean.cdma.u
-predicted[which(predicted$nw_type == "GSM" & !is.na(predicted$upload_speed)),]$upload_speed_prediction <- mean.gsm.u
-predicted[which(predicted$nw_type == "UMTS" & !is.na(predicted$upload_speed)),]$upload_speed_prediction <- mean.umts.u
-predicted[which(is.na(predicted$nw_type) & !is.na(predicted$upload_speed)),]$upload_speed_prediction <- mean.na.u
-summary(predicted$upload_speed_prediction)
-summary(predicted$upload_speed)
-table(predicted$upload_speed_prediction)
-
-rmsle.train.d.RAT <- sqrt(1 / nrow(predicted[which(!is.na(predicted$download_speed)),]) * 
-                            sum((log10(predicted[which(!is.na(predicted$download_speed)),]$download_speed_prediction + 1) - 
-                                   log10(predicted[which(!is.na(predicted$download_speed)),]$download_speed + 1))^2))
-rmsle.train.u.RAT <- sqrt(1 / nrow(predicted[which(!is.na(predicted$upload_speed)),]) * 
-                            sum((log10(predicted[which(!is.na(predicted$upload_speed)),]$upload_speed_prediction + 1) - 
-                                   log10(predicted[which(!is.na(predicted$upload_speed)),]$upload_speed + 1))^2))
-# try PREDICT = mean per RAT
-library(dplyr)
-testset.predict.mean <- select(testset, upload_speed, download_speed, network_type)
-summary(testset.predict.mean)
-testset.predict.mean$nw_type <- NA
-testset.predict.mean[which(testset.predict.mean$network_type == "LTE"),]$nw_type <- "LTE"
-testset.predict.mean[which(testset.predict.mean$network_type == "1xRTT" | testset.predict.mean$network_type == "eHRPD" | testset.predict.mean$network_type == "EVDO 0" | 
-                             testset.predict.mean$network_type == "EVDO A" | testset.predict.mean$network_type == "EVDO B" | testset.predict.mean$network_type == "CDMA"),]$nw_type <- "CDMA"
-testset.predict.mean[which(testset.predict.mean$network_type == "EDGE" | testset.predict.mean$network_type == "GPRS"),]$nw_type <- "GSM"
-testset.predict.mean[which(testset.predict.mean$network_type == "HSDPA" | testset.predict.mean$network_type == "HSUPA" | testset.predict.mean$network_type == "HSPA" | 
-                             testset.predict.mean$network_type == "HSPAP" | testset.predict.mean$network_type == "UMTS"),]$nw_type <- "UMTS"
-testset.predict.mean$nw_type <- factor(testset.predict.mean$nw_type)
-summary(testset.predict.mean$nw_type)
-summary(testset.predict.mean)
-#
-testset.predict.mean$download_speed <- as.character(levels(testset.predict.mean$download_speed))[testset.predict.mean$download_speed]
-str(testset.predict.mean$download_speed)
-table(testset.predict.mean$download_speed)
-testset.predict.mean[which(testset.predict.mean$download_speed == "PREDICT" & testset.predict.mean$nw_type == "LTE"),]$download_speed <- mean.lte.d
-testset.predict.mean[which(testset.predict.mean$download_speed == "PREDICT" & testset.predict.mean$nw_type == "CDMA"),]$download_speed <- mean.cdma.d
-testset.predict.mean[which(testset.predict.mean$download_speed == "PREDICT" & testset.predict.mean$nw_type == "GSM"),]$download_speed <- mean.gsm.d
-testset.predict.mean[which(testset.predict.mean$download_speed == "PREDICT" & testset.predict.mean$nw_type == "UMTS"),]$download_speed <- mean.umts.d
-testset.predict.mean[which(testset.predict.mean$download_speed == "PREDICT" & is.na(testset.predict.mean$nw_type)),]$download_speed <- mean.na.d
-table(testset.predict.mean$download_speed)
-#
-testset.predict.mean$upload_speed <- as.character(levels(testset.predict.mean$upload_speed))[testset.predict.mean$upload_speed]
-str(testset.predict.mean$upload_speed)
-table(testset.predict.mean$upload_speed)
-testset.predict.mean[which(testset.predict.mean$upload_speed == "PREDICT" & testset.predict.mean$nw_type == "LTE"),]$upload_speed <- mean.lte.u
-testset.predict.mean[which(testset.predict.mean$upload_speed == "PREDICT" & testset.predict.mean$nw_type == "CDMA"),]$upload_speed <- mean.cdma.u
-testset.predict.mean[which(testset.predict.mean$upload_speed == "PREDICT" & testset.predict.mean$nw_type == "GSM"),]$upload_speed <- mean.gsm.u
-testset.predict.mean[which(testset.predict.mean$upload_speed == "PREDICT" & testset.predict.mean$nw_type == "UMTS"),]$upload_speed <- mean.umts.u
-testset.predict.mean[which(testset.predict.mean$upload_speed == "PREDICT" & is.na(testset.predict.mean$nw_type)),]$upload_speed <- mean.na.u
-table(testset.predict.mean$upload_speed)
-#
-head(select(testset.predict.mean, upload_speed, download_speed))
-write.table(select(testset.predict.mean, upload_speed, download_speed), file = "YetAnotherTeam_initial_test_1.csv", sep = ",", row.names = F)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -875,10 +753,212 @@ t <- temp
 
 #_____________________________________________________________________________________________________________________________
 #####
-table(t$nw_type, t$download_speed)
-table(t[which(is.na(t$nw_type)),]$download_speed)
-table(t$nw_type, t$upload_speed)
-table(t[which(is.na(t$nw_type)),]$upload_speed)
 
-testset <- t
+evalset <- t
+
 ####
+
+
+
+#RF prediction
+library(dplyr)
+
+#_____________________________________________________________________________________________________________________________
+#Predicting speeds by technology
+
+evalset.predict.rf <- select(evalset, download_speed, upload_speed, new_month,
+                               new_year, new_weekday, new_network_country, network_id, 
+                               rssi, ec_io, rsrp, rsrq, rssnr, 
+                               network_id_sim, test_type, icmp_ping_time, icmp_ping_packet_loss,
+                               icmp_ping_range, app_version_code,
+                               nw_type)
+
+
+
+#lte.d
+str(evalset.predict.rf)
+str(select(temp, download_speed, upload_speed, new_month,
+           new_year,new_weekday, new_network_country, network_id, 
+           rssi, ec_io, rsrp, rsrq, rssnr, 
+           network_id_sim, test_type, icmp_ping_time, icmp_ping_packet_loss,
+           icmp_ping_range, app_version_code,
+           nw_type))
+evalset.predict.rf$new_month <- as.factor(evalset.predict.rf$new_month)
+evalset.predict.rf$new_year <- as.factor(evalset.predict.rf$new_year)
+evalset.predict.rf$new_weekday <- as.factor(evalset.predict.rf$new_weekday)
+evalset.predict.rf <- na.roughfix(evalset.predict.rf)
+evalset.predict.rf$new_network_country <- as.integer(evalset.predict.rf$new_network_country)
+evalset.predict.rf$network_id <- as.integer(evalset.predict.rf$network_id)
+
+levels(evalset.predict.rf$app_version_code)
+levels(temp.lte.d$app_version_code)
+table(evalset.predict.rf$app_version_code)
+table(temp.lte.d$app_version_code)
+levels(evalset.predict.rf$app_version_code) <- levels(temp$app_version_code)
+
+evalset.predict.rf$lte.d <- predict(rf.lte.d, evalset.predict.rf)
+summary(evalset.predict.rf[which(evalset.predict.rf$nw_type == "LTE" & evalset.predict.rf$download_speed == "PREDICT"),]$lte.d)
+
+#lte.u
+levels(evalset.predict.rf$new_month)
+levels(temp.lte.u.train$new_month)
+table(evalset.predict.rf$new_month)
+table(temp.lte.u.train$new_month)
+evalset.predict.rf[which(evalset.predict.rf$new_month == 11),]$new_month <- 12 #shame on me
+evalset.predict.rf$new_month <- factor(evalset.predict.rf$new_month)
+evalset.predict.rf$lte.u <- predict(rf.lte.u, evalset.predict.rf)
+summary(evalset.predict.rf[which(evalset.predict.rf$nw_type == "LTE" & evalset.predict.rf$upload_speed == "PREDICT"),]$lte.u)
+
+#umts.d
+str(evalset.predict.rf)
+str(select(temp, download_speed, upload_speed, new_month,
+           new_year,new_weekday, new_network_country, network_id, 
+           rssi, ec_io, rsrp, rsrq, rssnr, 
+           network_id_sim, test_type, icmp_ping_time, icmp_ping_packet_loss,
+           icmp_ping_range, app_version_code))
+#levels(evalset.predict.rf$app_version_code) <- levels(temp$app_version_code)
+#evalset.predict.rf <- na.roughfix(evalset.predict.rf)
+#evalset.predict.rf$umts.d <- NA
+str(evalset.predict.rf$new_month)
+evalset.predict.rf$new_month <- evalset$new_month
+evalset.predict.rf$new_month <- factor(evalset.predict.rf$new_month)
+
+evalset.predict.rf$umts.d <- predict(rf.umts.d, evalset.predict.rf)
+summary(evalset.predict.rf[which(evalset.predict.rf$nw_type == "UMTS" & evalset.predict.rf$download_speed == "PREDICT"),]$umts.d)
+
+#umts.u
+evalset.predict.rf$umts.u <- predict(rf.umts.u, evalset.predict.rf)
+summary(evalset.predict.rf[which(evalset.predict.rf$nw_type == "UMTS" & evalset.predict.rf$upload_speed == "PREDICT"),]$umts.u)
+
+#cdma.d
+str(evalset.predict.rf)
+str(select(temp.cdma.d, download_speed, upload_speed, new_month,
+           new_year,new_weekday, new_network_country, network_id, 
+           rssi, ec_io, rsrp, rsrq, rssnr, 
+           network_id_sim, test_type, icmp_ping_time, icmp_ping_packet_loss,
+           icmp_ping_range, app_version_code))
+levels(evalset.predict.rf$new_month)
+levels(temp$new_month)
+table(evalset.predict.rf$new_month)
+table(temp$new_month)
+evalset.predict.rf[which(evalset.predict.rf$new_month == 11),]$new_month <- 12 #shame on me
+evalset.predict.rf$new_month <- factor(evalset.predict.rf$new_month)
+evalset.predict.rf$new_network_country <- as.factor(evalset.predict.rf$new_network_country)
+str(evalset.predict.rf)
+evalset.predict.rf$new_network_country <- factor(evalset.predict.rf$new_network_country, levels = levels(temp.cdma.d$new_network_country))
+str(evalset.predict.rf$new_network_country)
+levels(evalset.predict.rf$new_network_country)
+levels(temp.cdma.d$new_network_country)
+evalset.predict.rf$cdma.d <- predict(rf.cdma.d, evalset.predict.rf)
+summary(evalset.predict.rf[which(evalset.predict.rf$nw_type == "CDMA" & evalset.predict.rf$download_speed == "PREDICT"),]$cdma.d)
+
+
+#cdma.u
+str(evalset.predict.rf)
+str(select(temp.cdma.u, download_speed, upload_speed, new_month,
+           new_year,new_weekday, new_network_country, network_id, 
+           rssi, ec_io, rsrp, rsrq, rssnr, 
+           network_id_sim, test_type, icmp_ping_time, icmp_ping_packet_loss,
+           icmp_ping_range, app_version_code))
+evalset.predict.rf$new_network_country <- factor(evalset.predict.rf$new_network_country, levels = levels(temp.cdma.u$new_network_country))
+evalset.predict.rf <- na.roughfix(evalset.predict.rf)
+evalset.predict.rf$cdma.u <- predict(rf.cdma.u, evalset.predict.rf)
+summary(evalset.predict.rf[which(evalset.predict.rf$nw_type == "CDMA" & evalset.predict.rf$upload_speed == "PREDICT"),]$cdma.u)
+
+#gsm.d
+str(evalset.predict.rf)
+str(select(temp, download_speed, upload_speed, new_month,
+           new_year,new_weekday, new_network_country, network_id, 
+           rssi, ec_io, rsrp, rsrq, rssnr, 
+           network_id_sim, test_type, icmp_ping_time, icmp_ping_packet_loss,
+           icmp_ping_range, app_version_code))
+evalset.predict.rf$new_network_country <- evalset$new_network_country
+evalset.predict.rf <- na.roughfix(evalset.predict.rf)
+evalset.predict.rf$gsm.d <- predict(rf.gsm.d, evalset.predict.rf)
+summary(evalset.predict.rf[which(evalset.predict.rf$nw_type == "GSM" & evalset.predict.rf$download_speed == "PREDICT"),]$gsm.d)
+
+#gsm.u
+str(evalset.predict.rf)
+str(select(temp, download_speed, upload_speed, new_month,
+           new_year,new_weekday, new_network_country, network_id, 
+           rssi, ec_io, rsrp, rsrq, rssnr, 
+           network_id_sim, test_type, icmp_ping_time, icmp_ping_packet_loss,
+           icmp_ping_range, app_version_code))
+evalset.predict.rf$gsm.u <- predict(rf.gsm.u, evalset.predict.rf)
+summary(testset.predict.rf.1$gsm.u)
+summary(evalset.predict.rf[which(evalset.predict.rf$nw_type == "GSM" & evalset.predict.rf$upload_speed == "PREDICT"),]$gsm.u)
+
+
+#
+summary(evalset.predict.rf)
+#testset.predict.rf.1$download_speed <- testset$download_speed
+#testset.predict.rf.1$upload_speed <- testset$upload_speed
+evalset.backup <- evalset.predict.rf
+
+evalset.predict.rf$download_speed <- as.character(levels(evalset.predict.rf$download_speed))[evalset.predict.rf$download_speed]
+table(evalset.predict.rf$download_speed)
+evalset.predict.rf$upload_speed <- as.character(levels(evalset.predict.rf$upload_speed))[evalset.predict.rf$upload_speed]
+table(evalset.predict.rf$upload_speed)
+
+summary(evalset$nw_type)
+#testset.predict.rf.1$nw_type <- testset$nw_type
+
+#Replacing PREDICTs with speeds
+evalset.predict.rf[which(evalset.predict.rf$download_speed == "PREDICT" & 
+                           evalset.predict.rf$nw_type == "LTE"),]$download_speed <- 
+  evalset.predict.rf[which(evalset.predict.rf$download_speed == "PREDICT" & 
+                             evalset.predict.rf$nw_type == "LTE"),]$lte.d
+head(evalset.predict.rf$download_speed, 100)
+evalset.predict.rf[which(evalset.predict.rf$upload_speed == "PREDICT" & 
+                           evalset.predict.rf$nw_type == "LTE"),]$upload_speed <- 
+  evalset.predict.rf[which(evalset.predict.rf$upload_speed == "PREDICT" & 
+                             evalset.predict.rf$nw_type == "LTE"),]$lte.u
+head(evalset.predict.rf$upload_speed, 100)
+
+evalset.predict.rf[which(evalset.predict.rf$download_speed == "PREDICT" & 
+                           evalset.predict.rf$nw_type == "UMTS"),]$download_speed <- 
+  evalset.predict.rf[which(evalset.predict.rf$download_speed == "PREDICT" & 
+                             evalset.predict.rf$nw_type == "UMTS"),]$umts.d
+head(evalset.predict.rf$download_speed, 100)
+evalset.predict.rf[which(evalset.predict.rf$upload_speed == "PREDICT" & 
+                           evalset.predict.rf$nw_type == "UMTS"),]$upload_speed <- 
+  evalset.predict.rf[which(evalset.predict.rf$upload_speed == "PREDICT" & 
+                             evalset.predict.rf$nw_type == "UMTS"),]$umts.u
+head(evalset.predict.rf$upload_speed, 100)
+
+evalset.predict.rf[which(evalset.predict.rf$download_speed == "PREDICT" & 
+                           evalset.predict.rf$nw_type == "CDMA"),]$download_speed <- 
+  evalset.predict.rf[which(evalset.predict.rf$download_speed == "PREDICT" & 
+                             evalset.predict.rf$nw_type == "CDMA"),]$cdma.d
+head(evalset.predict.rf$download_speed, 100)
+evalset.predict.rf[which(evalset.predict.rf$upload_speed == "PREDICT" & 
+                           evalset.predict.rf$nw_type == "CDMA"),]$upload_speed <- 
+  evalset.predict.rf[which(evalset.predict.rf$upload_speed == "PREDICT" & 
+                             evalset.predict.rf$nw_type == "CDMA"),]$cdma.u
+head(evalset.predict.rf$upload_speed, 100)
+
+evalset.predict.rf[which(evalset.predict.rf$download_speed == "PREDICT" & 
+                           evalset.predict.rf$nw_type == "GSM"),]$download_speed <- 
+  evalset.predict.rf[which(evalset.predict.rf$download_speed == "PREDICT" & 
+                             evalset.predict.rf$nw_type == "GSM"),]$gsm.d
+head(evalset.predict.rf$download_speed, 100)
+evalset.predict.rf[which(evalset.predict.rf$upload_speed == "PREDICT" & 
+                           evalset.predict.rf$nw_type == "GSM"),]$upload_speed <- 
+  evalset.predict.rf[which(evalset.predict.rf$upload_speed == "PREDICT" & 
+                             evalset.predict.rf$nw_type == "GSM"),]$gsm.u
+head(evalset.predict.rf$upload_speed, 100)
+
+#checking missing speeds
+length(evalset.predict.rf[which(evalset.predict.rf$download_speed == "PREDICT"),]$download_speed)
+length(evalset.predict.rf[which(evalset.predict.rf$download_speed == "SKIP"),]$download_speed)
+length(evalset.predict.rf[which(evalset.predict.rf$upload_speed == "PREDICT"),]$upload_speed)
+length(evalset.predict.rf[which(evalset.predict.rf$upload_speed == "SKIP"),]$upload_speed)
+
+#Saving outputs
+
+write.table(select(evalset.predict.rf, upload_speed, download_speed), file = "YetAnotherTeam_final_test_0.csv", sep = ",", row.names = F)
+
+#
+
+
+#
