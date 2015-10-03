@@ -796,18 +796,30 @@ str(evalset.predict.gbm)
 str(temp.tr)
 
 library(gbm)
+#evalset.predict.gbm$lte.d <- 10^(predict.gbm(object = gbm.lte.d, newdata = evalset.predict.gbm, 1000))
+#evalset.predict.gbm$lte.u <- 10^(predict.gbm(object = gbm.lte.u, newdata = evalset.predict.gbm, 1000))
+#evalset.predict.gbm$gsm.d <- 10^(predict.gbm(object = gbm.gsm.d, newdata = evalset.predict.gbm, 148))
+#evalset.predict.gbm$gsm.u <- 10^(predict.gbm(object = gbm.gsm.u, newdata = evalset.predict.gbm, 184))
+#evalset.predict.gbm$umts.d <- 10^(predict.gbm(object = gbm.umts.d, newdata = evalset.predict.gbm, 1000))
+#evalset.predict.gbm$umts.u <- 10^(predict.gbm(object = gbm.umts.u, newdata = evalset.predict.gbm, 1000))
+#evalset.predict.gbm$cdma.d <- 10^(predict.gbm(object = gbm.cdma.d, newdata = evalset.predict.gbm, 2000))
+#evalset.predict.gbm$cdma.u <- 10^(predict.gbm(object = gbm.cdma.u, newdata = evalset.predict.gbm, 2000))
+#evalset.predict.gbm$oos.d <- 10^(predict.gbm(object = gbm.oos.d, newdata = evalset.predict.gbm, 221))
+#evalset.predict.gbm$oos.u <- 10^(predict.gbm(object = gbm.oos.u, newdata = evalset.predict.gbm, 249))
+#evalset.predict.gbm$wifi.d <- 10^(predict.gbm(object = gbm.wifi.d, newdata = evalset.predict.gbm, 444))
+#evalset.predict.gbm$wifi.u <- 10^(predict.gbm(object = gbm.wifi.u, newdata = evalset.predict.gbm, 332))
 evalset.predict.gbm$lte.d <- 10^(predict.gbm(object = gbm.lte.d, newdata = evalset.predict.gbm, 1000))
 evalset.predict.gbm$lte.u <- 10^(predict.gbm(object = gbm.lte.u, newdata = evalset.predict.gbm, 1000))
-evalset.predict.gbm$gsm.d <- 10^(predict.gbm(object = gbm.gsm.d, newdata = evalset.predict.gbm, 148))
-evalset.predict.gbm$gsm.u <- 10^(predict.gbm(object = gbm.gsm.u, newdata = evalset.predict.gbm, 184))
+evalset.predict.gbm$gsm.d <- 10^(predict.gbm(object = gbm.gsm.d, newdata = evalset.predict.gbm, 500))
+evalset.predict.gbm$gsm.u <- 10^(predict.gbm(object = gbm.gsm.u, newdata = evalset.predict.gbm, 500))
 evalset.predict.gbm$umts.d <- 10^(predict.gbm(object = gbm.umts.d, newdata = evalset.predict.gbm, 1000))
 evalset.predict.gbm$umts.u <- 10^(predict.gbm(object = gbm.umts.u, newdata = evalset.predict.gbm, 1000))
 evalset.predict.gbm$cdma.d <- 10^(predict.gbm(object = gbm.cdma.d, newdata = evalset.predict.gbm, 2000))
 evalset.predict.gbm$cdma.u <- 10^(predict.gbm(object = gbm.cdma.u, newdata = evalset.predict.gbm, 2000))
-evalset.predict.gbm$oos.d <- 10^(predict.gbm(object = gbm.oos.d, newdata = evalset.predict.gbm, 221))
-evalset.predict.gbm$oos.u <- 10^(predict.gbm(object = gbm.oos.u, newdata = evalset.predict.gbm, 249))
-evalset.predict.gbm$wifi.d <- 10^(predict.gbm(object = gbm.wifi.d, newdata = evalset.predict.gbm, 444))
-evalset.predict.gbm$wifi.u <- 10^(predict.gbm(object = gbm.wifi.u, newdata = evalset.predict.gbm, 332))
+evalset.predict.gbm$oos.d <- 10^(predict.gbm(object = gbm.oos.d, newdata = evalset.predict.gbm, 500))
+evalset.predict.gbm$oos.u <- 10^(predict.gbm(object = gbm.oos.u, newdata = evalset.predict.gbm, 500))
+evalset.predict.gbm$wifi.d <- 10^(predict.gbm(object = gbm.wifi.d, newdata = evalset.predict.gbm, 500))
+evalset.predict.gbm$wifi.u <- 10^(predict.gbm(object = gbm.wifi.u, newdata = evalset.predict.gbm, 500))
 
 summary(evalset.predict.gbm)
 save(evalset.predict.gbm, file = "evalset.predict.gbm.3")
@@ -865,7 +877,7 @@ length(evalset.predict.gbm[which(evalset.predict.gbm$upload_speed == "SKIP"),]$u
 
 #Saving outputs
 
-write.table(select(evalset.predict.gbm, upload_speed, download_speed), file = "YetAnotherTeam_final_test_4.csv", sep = ",", row.names = F)
+write.table(select(evalset.predict.gbm, upload_speed, download_speed), file = "YetAnotherTeam_final_test_6.csv", sep = ",", row.names = F)
 
 
 
