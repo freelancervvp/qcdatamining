@@ -235,9 +235,63 @@ gbm.perf(gbm.u)
 gbm.u.predict.train <- predict.gbm(object = gbm.u, newdata = temp.tr.u.train, 4000)
 gbm.u.predict.test <- predict.gbm(object = gbm.u, newdata = temp.tr.u.test, 4000)
 
+head(cbind(temp.tr.u.train$upload_speed, gbm.u.predict.train), 50)
+head(cbind(temp.tr.u.test$upload_speed, gbm.u.predict.test), 50)
+
 rmsle.u.train <- sqrt(1 / length(gbm.u.predict.train) * 
                         sum((log1p(gbm.u.predict.train) - 
-                               log1p(temp.tr.u.train$download_speed))^2))
+                               log1p(temp.tr.u.train$upload_speed))^2))
 rmsle.u.test <- sqrt(1 / length(gbm.u.predict.test) * 
                        sum((log1p(gbm.u.predict.test) - 
-                              log1p(temp.tr.u.test$download_speed))^2))
+                              log1p(temp.tr.u.test$upload_speed))^2))
+
+
+# Predicting for all RATs
+
+str(evalset)
+
+evalset.predict.gbm <- select(evalset, download_speed, upload_speed, new_month,
+                             new_year, new_weekday, new_network_country, network_id, 
+                             rssi, ec_io, rsrp, rsrq, rssnr, wifi_rssi, wifi_band,
+                             icmp_ping_time, icmp_ping_packet_loss,
+                             icmp_ping_range, app_version_code, test_type,
+                             network_type, nw_type)
+
+evalset.predict.gbm$network_id <- factor(evalset.predict.gbm$network_id, levels = levels(temp$network_id)[1:1024])
+str(evalset.predict.gbm)
+
+Sys.time()
+evalset.predict.gbm$dl <- predict.gbm(object = gbm.d, newdata = evalset.predict.gbm, 4000)
+Sys.time()
+summary(evalset.predict.gbm$dl)
+summary(temp$download_speed)
+evalset.predict.gbm$ul <- predict.gbm(object = gbm.u, newdata = evalset.predict.gbm, 4000)
+summary(evalset.predict.gbm$ul)
+summary(temp$upload_speed)
+Sys.time()
+
+#
+evalset.predict.gbm$download_speed <- as.character(levels(evalset.predict.gbm$download_speed))[evalset.predict.gbm$download_speed]
+table(evalset.predict.gbm$download_speed)
+evalset.predict.gbm$upload_speed <- as.character(levels(evalset.predict.gbm$upload_speed))[evalset.predict.gbm$upload_speed]
+table(evalset.predict.gbm$upload_speed)
+#
+
+#
+evalset.predict.gbm[which(evalset.predict.gbm$download_speed == "PREDICT"),]$download_speed <- 
+  evalset.predict.gbm[which(evalset.predict.gbm$download_speed == "PREDICT"),]$dl
+evalset.predict.gbm[which(evalset.predict.gbm$upload_speed == "PREDICT"),]$upload_speed <- 
+  evalset.predict.gbm[which(evalset.predict.gbm$upload_speed == "PREDICT"),]$ul
+#
+
+#checking missing speeds
+length(evalset.predict.gbm[which(evalset.predict.gbm$download_speed == "PREDICT"),]$download_speed)
+length(evalset.predict.gbm[which(evalset.predict.gbm$download_speed == "SKIP"),]$download_speed)
+length(evalset.predict.gbm[which(evalset.predict.gbm$upload_speed == "PREDICT"),]$upload_speed)
+length(evalset.predict.gbm[which(evalset.predict.gbm$upload_speed == "SKIP"),]$upload_speed)
+
+#Saving outputs
+
+write.table(select(evalset.predict.gbm, upload_speed, download_speed), file = "YetAnotherTeam_final_test_3.csv", sep = ",", row.names = F)
+
+#
