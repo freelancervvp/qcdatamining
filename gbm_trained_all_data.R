@@ -127,11 +127,11 @@ gbm.lte.d.2 <- gbm(log10(download_speed) ~ new_month + new_year + new_weekday + 
                  + app_version_code + test_type + unreliable, 
                  data = temp.tr.d.train.lte, 
                  distribution = "gaussian",
-                 n.trees = 2000,
+                 n.trees = 1000,
                  interaction.depth = 20,
                  n.minobsinnode = 10,
-                 shrinkage = 0.005,
-                 cv.folds = 10,
+                 shrinkage = 0.01,
+                 cv.folds = 5,
                  keep.data = TRUE,
                  verbose = TRUE)
 Sys.time()
