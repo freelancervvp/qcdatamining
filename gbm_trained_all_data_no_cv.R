@@ -709,5 +709,5 @@ length(evalset.predict.gbm[which(evalset.predict.gbm$upload_speed == "SKIP"),]$u
 
 #Saving outputs
 
-write.table(select(evalset.predict.gbm, upload_speed, download_speed), file = "YetAnotherTeam_final_test_4.csv", sep = ",", row.names = F)
+write.table(select(evalset.predict.gbm, upload_speed, download_speed), file = "YetAnotherTeam_final_test_7.csv", sep = ",", row.names = F)
 
