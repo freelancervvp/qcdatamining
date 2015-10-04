@@ -189,11 +189,11 @@ summary(gbm.lte.d.3)
 gbm.perf(gbm.lte.d.3)
 #pretty.gbm.tree(gbm.lte.d.3, i.tree = 500)
 
-gbm.lte.d.predict.train <- 10^(predict.gbm(object = gbm.lte.d.3, newdata = temp.tr.d.train.lte, 648))
+gbm.lte.d.predict.train <- 10^(predict.gbm(object = gbm.lte.d.3, newdata = temp.tr.d.train.lte, 618))
 summary(temp.tr.d.train.lte$download_speed)
 summary(gbm.lte.d.predict.train)
 head(cbind(temp.tr.d.train.lte$download_speed, gbm.lte.d.predict.train), 25)
-gbm.lte.d.predict.test <- 10^(predict.gbm(object = gbm.lte.d.3, newdata = temp.tr.d.test.lte, 648))
+gbm.lte.d.predict.test <- 10^(predict.gbm(object = gbm.lte.d.3, newdata = temp.tr.d.test.lte, 618))
 head(cbind(temp.tr.d.test.lte$download_speed, gbm.lte.d.predict.test), 25)
 
 rmsle.lte.d.train <- sqrt(1 / length(gbm.lte.d.predict.train) * 
