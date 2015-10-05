@@ -242,12 +242,12 @@ summary(gbm.umts.u.5)
 gbm.perf(gbm.umts.u.5)
 #pretty.gbm.tree(gbm.umts.u, i.tree = 500)
 
-gbm.umts.u.predict.train <- 10^(predict.gbm(object = gbm.umts.u.5, newdata = temp.tr.u.train.umts, 1000))
+gbm.umts.u.predict.train <- 10^(predict.gbm(object = gbm.umts.u.5, newdata = temp.tr.u.train.umts, 800))
 summary(temp.tr.u.train.umts$upload_speed)
 summary(gbm.umts.u.predict.train)
 head(cbind(temp.tr.u.train.umts$upload_speed, gbm.umts.u.predict.train), 25)
 
-gbm.umts.u.predict.test <- 10^(predict.gbm(object = gbm.umts.u.5, newdata = temp.tr.u.test.umts, 1000))
+gbm.umts.u.predict.test <- 10^(predict.gbm(object = gbm.umts.u.5, newdata = temp.tr.u.test.umts, 800))
 summary(temp.tr.u.test.umts$upload_speed)
 summary(gbm.umts.u.predict.test)
 head(cbind(temp.tr.u.test.umts$upload_speed, gbm.umts.u.predict.test), 25)
@@ -290,12 +290,12 @@ gbm.gsm.d.5
 summary(gbm.gsm.d.5)
 gbm.perf(gbm.gsm.d.5)
 
-gbm.gsm.d.predict.train <- 10^(predict.gbm(object = gbm.gsm.d.5, newdata = temp.tr.d.train.gsm, 1000))
+gbm.gsm.d.predict.train <- 10^(predict.gbm(object = gbm.gsm.d.5, newdata = temp.tr.d.train.gsm, 60))
 summary(temp.tr.d.train.gsm$download_speed)
 summary(gbm.gsm.d.predict.train)
 head(cbind(temp.tr.d.train.gsm$download_speed, gbm.gsm.d.predict.train), 25)
 
-gbm.gsm.d.predict.test <- 10^(predict.gbm(object = gbm.gsm.d.5, newdata = temp.tr.d.test.gsm, 1000))
+gbm.gsm.d.predict.test <- 10^(predict.gbm(object = gbm.gsm.d.5, newdata = temp.tr.d.test.gsm, 60))
 head(cbind(temp.tr.d.test.gsm$download_speed, gbm.gsm.d.predict.test), 25)
 
 rmsle.gsm.d.train <- sqrt(1 / length(gbm.gsm.d.predict.train) * 
@@ -335,12 +335,12 @@ gbm.gsm.u.5
 summary(gbm.gsm.u.5)
 gbm.perf(gbm.gsm.u.5)
 
-gbm.gsm.u.predict.train <- 10^(predict.gbm(object = gbm.gsm.u.5, newdata = temp.tr.u.train.gsm, 1000))
+gbm.gsm.u.predict.train <- 10^(predict.gbm(object = gbm.gsm.u.5, newdata = temp.tr.u.train.gsm, 200))
 summary(temp.tr.u.train.gsm$upload_speed)
 summary(gbm.gsm.u.predict.train)
 head(cbind(temp.tr.u.train.gsm$upload_speed, gbm.gsm.u.predict.train), 25)
 
-gbm.gsm.u.predict.test <- 10^(predict.gbm(object = gbm.gsm.u.5, newdata = temp.tr.u.test.gsm, 1000))
+gbm.gsm.u.predict.test <- 10^(predict.gbm(object = gbm.gsm.u.5, newdata = temp.tr.u.test.gsm, 200))
 summary(temp.tr.u.test.gsm$upload_speed)
 summary(gbm.gsm.u.predict.test)
 head(cbind(temp.tr.u.test.gsm$upload_speed, gbm.gsm.u.predict.test), 25)
@@ -429,12 +429,12 @@ gbm.cdma.u.5
 summary(gbm.cdma.u.5)
 gbm.perf(gbm.cdma.u.5)
 
-gbm.cdma.u.predict.train <- 10^(predict.gbm(object = gbm.cdma.u.5, newdata = temp.tr.u.train.cdma, 1000))
+gbm.cdma.u.predict.train <- 10^(predict.gbm(object = gbm.cdma.u.5, newdata = temp.tr.u.train.cdma, 900))
 summary(temp.tr.u.train.cdma$upload_speed)
 summary(gbm.cdma.u.predict.train)
 head(cbind(temp.tr.u.train.cdma$upload_speed, gbm.cdma.u.predict.train), 25)
 
-gbm.cdma.u.predict.test <- 10^(predict.gbm(object = gbm.cdma.u.5, newdata = temp.tr.u.test.cdma, 1000))
+gbm.cdma.u.predict.test <- 10^(predict.gbm(object = gbm.cdma.u.5, newdata = temp.tr.u.test.cdma, 900))
 summary(temp.tr.u.test.cdma$upload_speed)
 summary(gbm.cdma.u.predict.test)
 head(cbind(temp.tr.u.test.cdma$upload_speed, gbm.cdma.u.predict.test), 25)
@@ -477,12 +477,12 @@ gbm.wifi.d.5
 summary(gbm.wifi.d.5)
 gbm.perf(gbm.wifi.d.5)
 
-gbm.wifi.d.predict.train <- 10^(predict.gbm(object = gbm.wifi.d.5, newdata = temp.tr.d.train.wifi, 1000))
+gbm.wifi.d.predict.train <- 10^(predict.gbm(object = gbm.wifi.d.5, newdata = temp.tr.d.train.wifi, 300))
 summary(temp.tr.d.train.wifi$download_speed)
 summary(gbm.wifi.d.predict.train)
 head(cbind(temp.tr.d.train.wifi$download_speed, gbm.wifi.d.predict.train), 25)
 
-gbm.wifi.d.predict.test <- 10^(predict.gbm(object = gbm.wifi.d.5, newdata = temp.tr.d.test.wifi, 1000))
+gbm.wifi.d.predict.test <- 10^(predict.gbm(object = gbm.wifi.d.5, newdata = temp.tr.d.test.wifi, 300))
 head(cbind(temp.tr.d.test.wifi$download_speed, gbm.wifi.d.predict.test), 25)
 
 rmsle.wifi.d.train <- sqrt(1 / length(gbm.wifi.d.predict.train) * 
@@ -522,12 +522,12 @@ gbm.wifi.u.5
 summary(gbm.wifi.u.5)
 gbm.perf(gbm.wifi.u.5)
 
-gbm.wifi.u.predict.train <- 10^(predict.gbm(object = gbm.wifi.u.5, newdata = temp.tr.u.train.wifi, 1000))
+gbm.wifi.u.predict.train <- 10^(predict.gbm(object = gbm.wifi.u.5, newdata = temp.tr.u.train.wifi, 180))
 summary(temp.tr.u.train.wifi$upload_speed)
 summary(gbm.wifi.u.predict.train)
 head(cbind(temp.tr.u.train.wifi$upload_speed, gbm.wifi.u.predict.train), 25)
 
-gbm.wifi.u.predict.test <- 10^(predict.gbm(object = gbm.wifi.u.5, newdata = temp.tr.u.test.wifi, 1000))
+gbm.wifi.u.predict.test <- 10^(predict.gbm(object = gbm.wifi.u.5, newdata = temp.tr.u.test.wifi, 180))
 summary(temp.tr.u.test.wifi$upload_speed)
 summary(gbm.wifi.u.predict.test)
 head(cbind(temp.tr.u.test.wifi$upload_speed, gbm.wifi.u.predict.test), 25)
@@ -569,12 +569,12 @@ gbm.oos.d.5
 summary(gbm.oos.d.5)
 gbm.perf(gbm.oos.d.5)
 
-gbm.oos.d.predict.train <- 10^(predict.gbm(object = gbm.oos.d.5, newdata = temp.tr.d.train.oos, 1000))
+gbm.oos.d.predict.train <- 10^(predict.gbm(object = gbm.oos.d.5, newdata = temp.tr.d.train.oos, 92))
 summary(temp.tr.d.train.oos$download_speed)
 summary(gbm.oos.d.predict.train)
 head(cbind(temp.tr.d.train.oos$download_speed, gbm.oos.d.predict.train), 25)
 
-gbm.oos.d.predict.test <- 10^(predict.gbm(object = gbm.oos.d.5, newdata = temp.tr.d.test.oos, 1000))
+gbm.oos.d.predict.test <- 10^(predict.gbm(object = gbm.oos.d.5, newdata = temp.tr.d.test.oos, 92))
 head(cbind(temp.tr.d.test.oos$download_speed, gbm.oos.d.predict.test), 25)
 
 rmsle.oos.d.train <- sqrt(1 / length(gbm.oos.d.predict.train) * 
@@ -612,12 +612,12 @@ gbm.oos.u.5
 summary(gbm.oos.u.5)
 gbm.perf(gbm.oos.u.5)
 
-gbm.oos.u.predict.train <- 10^(predict.gbm(object = gbm.oos.u.5, newdata = temp.tr.u.train.oos, 1000))
+gbm.oos.u.predict.train <- 10^(predict.gbm(object = gbm.oos.u.5, newdata = temp.tr.u.train.oos, 122))
 summary(temp.tr.u.train.oos$upload_speed)
 summary(gbm.oos.u.predict.train)
 head(cbind(temp.tr.u.train.oos$upload_speed, gbm.oos.u.predict.train), 25)
 
-gbm.oos.u.predict.test <- 10^(predict.gbm(object = gbm.oos.u.5, newdata = temp.tr.u.test.oos, 1000))
+gbm.oos.u.predict.test <- 10^(predict.gbm(object = gbm.oos.u.5, newdata = temp.tr.u.test.oos, 122))
 summary(temp.tr.u.test.oos$upload_speed)
 summary(gbm.oos.u.predict.test)
 head(cbind(temp.tr.u.test.oos$upload_speed, gbm.oos.u.predict.test), 25)
@@ -634,114 +634,4 @@ save(gbm.oos.u.5, file = "gbm.oos.u.5")
 #
 #
 
-
-
-
-##################################################
-#PREDICTING
-
-load("evalset.for.gbm.2")
-
-library(caret)
-library(dplyr)
-set.seed(16)
-
-evalset.predict.gbm <- select(evalset, 
-                              download_speed, upload_speed, 
-                              new_month, new_year, new_weekday, new_hour,
-                              new_network_country, 
-                              network_id, network_id_sim,
-                              phone_model,
-                              loc_source_gps_one_net_zero, location_precision,
-                              rssi, 
-                              ec_io, 
-                              rsrp, rsrq, rssnr, 
-                              wifi_rssi, wifi_band,
-                              icmp_ping_time, icmp_ping_packet_loss, icmp_ping_range,
-                              app_version_code, 
-                              test_type, unreliable,
-                              network_type, nw_type)
-
-str(evalset.predict.gbm)
-evalset.predict.gbm.backup <- evalset.predict.gbm
-str(temp.tr)
-evalset.predict.gbm$new_network_country <- factor(evalset.predict.gbm$new_network_country, levels = levels(temp.tr$new_network_country))
-evalset.predict.gbm$network_id <- factor(evalset.predict.gbm$network_id, levels = levels(temp.tr$network_id))
-evalset.predict.gbm$network_id_sim <- factor(evalset.predict.gbm$network_id_sim, levels = levels(temp.tr$network_id_sim))
-evalset.predict.gbm$phone_model <- factor(evalset.predict.gbm$phone_model, levels = levels(temp.tr$phone_model))
-str(evalset.predict.gbm)
-str(temp.tr)
-
-library(gbm)
-evalset.predict.gbm$lte.d <- 10^(predict.gbm(object = gbm.lte.d.3, newdata = evalset.predict.gbm, 1500))
-evalset.predict.gbm$lte.u <- 10^(predict.gbm(object = gbm.lte.u.3, newdata = evalset.predict.gbm, 1500))
-evalset.predict.gbm$gsm.d <- 10^(predict.gbm(object = gbm.gsm.d.3, newdata = evalset.predict.gbm, 86))
-evalset.predict.gbm$gsm.u <- 10^(predict.gbm(object = gbm.gsm.u.3, newdata = evalset.predict.gbm, 350))
-evalset.predict.gbm$umts.d <- 10^(predict.gbm(object = gbm.umts.d.3, newdata = evalset.predict.gbm, 1500))
-evalset.predict.gbm$umts.u <- 10^(predict.gbm(object = gbm.umts.u.3, newdata = evalset.predict.gbm, 1500))
-evalset.predict.gbm$cdma.d <- 10^(predict.gbm(object = gbm.cdma.d.3, newdata = evalset.predict.gbm, 650))
-evalset.predict.gbm$cdma.u <- 10^(predict.gbm(object = gbm.cdma.u.3, newdata = evalset.predict.gbm, 1000))
-evalset.predict.gbm$oos.d <- 10^(predict.gbm(object = gbm.oos.d.3, newdata = evalset.predict.gbm, 115))
-evalset.predict.gbm$oos.u <- 10^(predict.gbm(object = gbm.oos.u.3, newdata = evalset.predict.gbm, 123))
-evalset.predict.gbm$wifi.d <- 10^(predict.gbm(object = gbm.wifi.d.3, newdata = evalset.predict.gbm, 400))
-evalset.predict.gbm$wifi.u <- 10^(predict.gbm(object = gbm.wifi.u.3, newdata = evalset.predict.gbm, 250))
-
-summary(evalset.predict.gbm)
-save(evalset.predict.gbm, file = "evalset.predict.gbm.3")
-
-#
-evalset.predict.gbm$download_speed <- as.character(levels(evalset.predict.gbm$download_speed))[evalset.predict.gbm$download_speed]
-table(evalset.predict.gbm$download_speed)
-evalset.predict.gbm$upload_speed <- as.character(levels(evalset.predict.gbm$upload_speed))[evalset.predict.gbm$upload_speed]
-table(evalset.predict.gbm$upload_speed)
-#
-
-summary(evalset$nw_type)
-summary(evalset.predict.gbm$nw_type)
-
-
-#Replacing PREDICTs with speeds
-evalset.predict.gbm[which(evalset.predict.gbm$download_speed == "PREDICT" & evalset.predict.gbm$nw_type == "LTE"),]$download_speed <- 
-        evalset.predict.gbm[which(evalset.predict.gbm$download_speed == "PREDICT" & evalset.predict.gbm$nw_type == "LTE"),]$lte.d
-evalset.predict.gbm[which(evalset.predict.gbm$upload_speed == "PREDICT" & evalset.predict.gbm$nw_type == "LTE"),]$upload_speed <- 
-        evalset.predict.gbm[which(evalset.predict.gbm$upload_speed == "PREDICT" & evalset.predict.gbm$nw_type == "LTE"),]$lte.u
-
-evalset.predict.gbm[which(evalset.predict.gbm$download_speed == "PREDICT" & evalset.predict.gbm$nw_type == "GSM"),]$download_speed <- 
-        evalset.predict.gbm[which(evalset.predict.gbm$download_speed == "PREDICT" & evalset.predict.gbm$nw_type == "GSM"),]$gsm.d
-evalset.predict.gbm[which(evalset.predict.gbm$upload_speed == "PREDICT" & evalset.predict.gbm$nw_type == "GSM"),]$upload_speed <- 
-        evalset.predict.gbm[which(evalset.predict.gbm$upload_speed == "PREDICT" & evalset.predict.gbm$nw_type == "GSM"),]$gsm.u
-
-evalset.predict.gbm[which(evalset.predict.gbm$download_speed == "PREDICT" & evalset.predict.gbm$nw_type == "UMTS"),]$download_speed <- 
-        evalset.predict.gbm[which(evalset.predict.gbm$download_speed == "PREDICT" & evalset.predict.gbm$nw_type == "UMTS"),]$umts.d
-evalset.predict.gbm[which(evalset.predict.gbm$upload_speed == "PREDICT" & evalset.predict.gbm$nw_type == "UMTS"),]$upload_speed <- 
-        evalset.predict.gbm[which(evalset.predict.gbm$upload_speed == "PREDICT" & evalset.predict.gbm$nw_type == "UMTS"),]$umts.u
-
-evalset.predict.gbm[which(evalset.predict.gbm$download_speed == "PREDICT" & evalset.predict.gbm$nw_type == "CDMA"),]$download_speed <- 
-        evalset.predict.gbm[which(evalset.predict.gbm$download_speed == "PREDICT" & evalset.predict.gbm$nw_type == "CDMA"),]$cdma.d
-evalset.predict.gbm[which(evalset.predict.gbm$upload_speed == "PREDICT" & evalset.predict.gbm$nw_type == "CDMA"),]$upload_speed <- 
-        evalset.predict.gbm[which(evalset.predict.gbm$upload_speed == "PREDICT" & evalset.predict.gbm$nw_type == "CDMA"),]$cdma.u
-
-evalset.predict.gbm[which(evalset.predict.gbm$download_speed == "PREDICT" & evalset.predict.gbm$nw_type == "OOS"),]$download_speed <- 
-        evalset.predict.gbm[which(evalset.predict.gbm$download_speed == "PREDICT" & evalset.predict.gbm$nw_type == "OOS"),]$oos.d
-evalset.predict.gbm[which(evalset.predict.gbm$upload_speed == "PREDICT" & evalset.predict.gbm$nw_type == "OOS"),]$upload_speed <- 
-        evalset.predict.gbm[which(evalset.predict.gbm$upload_speed == "PREDICT" & evalset.predict.gbm$nw_type == "OOS"),]$oos.u
-
-evalset.predict.gbm[which(evalset.predict.gbm$download_speed == "PREDICT" & evalset.predict.gbm$nw_type == "WIFI"),]$download_speed <- 
-        evalset.predict.gbm[which(evalset.predict.gbm$download_speed == "PREDICT" & evalset.predict.gbm$nw_type == "WIFI"),]$wifi.d
-evalset.predict.gbm[which(evalset.predict.gbm$upload_speed == "PREDICT" & evalset.predict.gbm$nw_type == "WIFI"),]$upload_speed <- 
-        evalset.predict.gbm[which(evalset.predict.gbm$upload_speed == "PREDICT" & evalset.predict.gbm$nw_type == "WIFI"),]$wifi.u
-
-
-
-#checking missing speeds
-length(evalset.predict.gbm[which(evalset.predict.gbm$download_speed == "PREDICT"),]$download_speed)
-length(evalset.predict.gbm[which(evalset.predict.gbm$download_speed == "SKIP"),]$download_speed)
-length(evalset.predict.gbm[which(evalset.predict.gbm$upload_speed == "PREDICT"),]$upload_speed)
-length(evalset.predict.gbm[which(evalset.predict.gbm$upload_speed == "SKIP"),]$upload_speed)
-
-
-#Saving outputs
-
-write.table(select(evalset.predict.gbm, upload_speed, download_speed), file = "YetAnotherTeam_final_test_9.csv", sep = ",", row.names = F)
-
-
+#goto new_data_gbm_evalset.R
